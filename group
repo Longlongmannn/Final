@@ -1,0 +1,138 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+
+const int maxSize = 10;
+
+
+struct Task {
+    string description;
+    bool completed;
+    Task() : completed(false) {}
+};
+
+
+// Global variables
+int inputNumber[maxSize];
+string tasks[maxSize];
+string AM_PM[maxSize];
+int numTasks = 0;
+Task todo;
+
+
+// Function to add a task to the arrays
+void addTask(int &numTasks, int inputNumber[], string tasks[], string ampm[]) {
+    if (numTasks < maxSize) {
+        cout << "Enter task number: ";
+        cin >> inputNumber[numTasks];
+        cin.ignore();
+       
+        cout << "Enter task for the day: ";
+        getline(cin, tasks[numTasks]);
+
+
+        cout << "Enter task time (AM or PM): ";
+        getline(cin, ampm[numTasks]);
+
+
+        ++numTasks;
+        cout << "Task added successfully." << endl;
+    } else {
+        cout << "Task list is full. Cannot add more tasks." << endl;
+    }
+}
+
+
+// Function to delete a task from the arrays
+void deleteTask(int &numTasks, int inputNumber[], string tasks[], string ampm[]) {
+    if (numTasks > 0) {
+        int taskNumToDelete;
+        cout << "Enter task number to delete: ";
+        cin >> taskNumToDelete;
+       
+        int taskIndexToDelete = -1;
+        for (int i = 0; i < numTasks; ++i) {
+            if (inputNumber[i] == taskNumToDelete) {
+                taskIndexToDelete = i;
+                break;
+            }
+        }
+
+
+        if (taskIndexToDelete != -1) {
+            for (int i = taskIndexToDelete; i < numTasks - 1; ++i) {
+                inputNumber[i] = inputNumber[i + 1];
+                tasks[i] = tasks[i + 1];
+                ampm[i] = ampm[i + 1];
+            }
+            --numTasks;
+            cout << "Task deleted successfully." << endl;
+        } else {
+            cout << "Task number not found. No task deleted." << endl;
+        }
+    } else {
+        cout << "Task list is empty. Nothing to delete." << endl;
+    }
+}
+
+
+// Function to list all tasks
+void listTasks(int inputNumber[], string tasks[], string ampm[], int numTasks) {
+    if (numTasks > 0) {
+        cout << "Current tasks:\n";
+        for (int i = 0; i < numTasks; ++i) {
+            cout << "Task " << inputNumber[i] << ": " << tasks[i] << " [" << ampm[i] << "]" << endl;
+        }
+    } else {
+        cout << "No tasks to display." << endl;
+    }
+}
+
+
+// Functions for struct-based task management (from Pic 5 & 6)
+void addTaskStruct(Task& todo, const string& description) {
+    todo.description = description;
+    todo.completed = false;
+    cout << "Task added: " << description << endl;
+}
+
+
+void displayTask(const Task& todo) {
+    cout << "To-Do List:\n";
+    cout << (todo.completed ? "[X] " : "[ ] ") << todo.description << '\n';
+}
+
+
+void deleteTaskStruct(Task& todo) {
+    cout << "Task deleted: " << todo.description << '\n';
+    todo.description.clear();
+    todo.completed = false;
+}
+
+
+// Main function
+int main() {
+    char choice;
+    string description;
+
+
+    while (true) {
+        cout << "\n===== Task Management System =====\n";
+        cout << "1. Add Task\n2. Delete Task\n3. List Tasks\n4. Display Struct Task\n5. Add Struct Task\n6. Delete Struct Task\n0. Exit\nEnter your choice: ";
+        cin >> choice;
+        cin.ignore();
+
+
+        switch (choice) {
+            case '1': addTask(numTasks, inputNumber, tasks, AM_PM); break;
+            case '2': deleteTask(numTasks, inputNumber, tasks, AM_PM); break;
+            case '3': listTasks(inputNumber, tasks, AM_PM, numTasks); break;
+            case '4': displayTask(todo); break;
+            case '5': cout << "Enter task description: "; getline(cin, description); addTaskStruct(todo, description); break;
+            case '6': deleteTaskStruct(todo); break;
+            case '0': cout << "Exiting. Goodbye!\n"; return 0;
+            default: cout << "Invalid choice. Try again.\n"; break;
+        }
+    }
+}
